@@ -1,0 +1,34 @@
+name: Monitor de Trafico
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # Ejecuta cada 30 minutos
+  workflow_dispatch:      # Botón para ejecutarlo manualmente
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write     # Permiso vital para que el bot pueda guardar el CSV
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Instalar librerías
+        run: pip install -r requirements.txt
+
+      - name: Ejecutar script
+        run: python main.py
+
+      - name: Guardar datos en el repo
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add datos_trafico.csv
+          git commit -m "Registro de trafico: $(date)" || exit 0
+          git push
