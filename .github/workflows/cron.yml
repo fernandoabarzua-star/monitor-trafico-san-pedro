@@ -32,3 +32,4 @@ jobs:
           git add datos_trafico.csv
           git commit -m "Registro de trafico: $(date)" || exit 0
           git push
+  # Despertando al robot
